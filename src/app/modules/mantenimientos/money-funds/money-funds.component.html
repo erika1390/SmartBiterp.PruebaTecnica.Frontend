@@ -1,1 +1,50 @@
-<p>money-funds works!</p>
+<h2>Fondos Monetarios</h2>
+
+<button class="clean" (click)="new()">Limpiar</button>
+
+<!-- FORMULARIO -->
+<div form>
+	<label>Nombre:</label>
+	<input type="text" [(ngModel)]="form.name" placeholder="Nombre del fondo">
+
+	<label>Tipo de Fondo:</label>
+	<select [(ngModel)]="form.fundType">
+		<option value="">Seleccione...</option>
+		<option value="CashBox">Caja Menuda</option>
+		<option value="BankAccount">Cuenta Bancaria</option>
+	</select>
+
+	<label>Saldo Inicial:</label>
+	<input type="number" [(ngModel)]="form.initialBalance" placeholder="Saldo inicial">
+
+	<button (click)="save()">
+		{{ isEditing ? 'Actualizar' : 'Guardar' }}
+	</button>
+</div>
+
+<hr>
+
+<!-- TABLA -->
+<table>
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Nombre</th>
+			<th>Tipo de Fondo</th>
+			<th>Saldo Inicial</th>
+			<th>Acciones</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let item of moneyFunds">
+			<td>{{ item.id }}</td>
+			<td>{{ item.name }}</td>
+			<td>{{ item.fundType === 'CashBox' ? 'Caja Menuda' : 'Cuenta Bancaria' }}</td>
+			<td>{{ item.initialBalance | number:'1.2-2' }}</td>
+			<td>
+				<button (click)="edit(item)">Editar</button>
+				<button class="delete" (click)="delete(item.id)">Eliminar</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
