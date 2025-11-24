@@ -1,1 +1,62 @@
-<p>deposits works!</p>
+<div class="deposits-container">
+	<h2>Consulta de Depósitos</h2>
+	<form [formGroup]="filterForm" (ngSubmit)="fetchDeposits()" class="filter-form">
+		<mat-form-field appearance="outline">
+			<mat-label>Fecha Inicio</mat-label>
+			<input matInput [matDatepicker]="startPicker" formControlName="start" required>
+			<mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+			<mat-datepicker #startPicker></mat-datepicker>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Fecha Fin</mat-label>
+			<input matInput [matDatepicker]="endPicker" formControlName="end" required>
+			<mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+			<mat-datepicker #endPicker></mat-datepicker>
+		</mat-form-field>
+		<button mat-raised-button color="primary" type="submit" [disabled]="filterForm.invalid || loading()">Buscar</button>
+	</form>
+
+	<h2>Registrar Depósito</h2>
+	<form [formGroup]="createForm" (ngSubmit)="createDeposit()" class="filter-form">
+		<mat-form-field appearance="outline">
+			<mat-label>Fecha</mat-label>
+			<input matInput [matDatepicker]="depositDatePicker" formControlName="date" required>
+			<mat-datepicker-toggle matSuffix [for]="depositDatePicker"></mat-datepicker-toggle>
+			<mat-datepicker #depositDatePicker></mat-datepicker>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Fondo</mat-label>
+			<mat-select formControlName="moneyFundId" required>
+				<mat-option *ngFor="let fund of moneyFunds()" [value]="fund.id">
+					{{ fund.name }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Monto</mat-label>
+			<input matInput type="number" formControlName="amount" required min="0.01">
+		</mat-form-field>
+		<button mat-raised-button color="primary" type="submit" [disabled]="createForm.invalid || loading()">Registrar</button>
+	</form>
+
+	<table mat-table [dataSource]="deposits()" class="deposits-table">
+		<ng-container matColumnDef="id">
+			<th mat-header-cell *matHeaderCellDef>ID</th>
+			<td mat-cell *matCellDef="let element">{{ element.id }}</td>
+		</ng-container>
+		<ng-container matColumnDef="moneyFundName">
+			<th mat-header-cell *matHeaderCellDef>Fondo</th>
+			<td mat-cell *matCellDef="let element">{{ element.moneyFundName }}</td>
+		</ng-container>
+		<ng-container matColumnDef="amount">
+			<th mat-header-cell *matHeaderCellDef>Monto</th>
+			<td mat-cell *matCellDef="let element">{{ element.amount | currency:'USD':'symbol':'1.2-2' }}</td>
+		</ng-container>
+		<ng-container matColumnDef="date">
+			<th mat-header-cell *matHeaderCellDef>Fecha</th>
+			<td mat-cell *matCellDef="let element">{{ element.date | date:'yyyy-MM-dd' }}</td>
+		</ng-container>
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	</table>
+</div>
