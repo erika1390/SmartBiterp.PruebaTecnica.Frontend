@@ -1,1 +1,37 @@
-<p>movements works!</p>
+<div class="container-movements">
+  <h2 class="titulo-mov">Consulta de Movimientos</h2>
+  <form (ngSubmit)="consultar()" class="filter-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha inicio*</mat-label>
+      <input matInput type="date" [(ngModel)]="start" name="start" required>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha fin*</mat-label>
+      <input matInput type="date" [(ngModel)]="end" name="end" required>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Consultar</button>
+  </form>
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="movements" class="mat-elevation-z8 custom-table" *ngIf="movements.length">
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef class="header-blue">Tipo</th>
+        <td mat-cell *matCellDef="let m">{{ m.type }}</td>
+      </ng-container>
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef class="header-blue">Fecha</th>
+        <td mat-cell *matCellDef="let m">{{ m.date | date:'yyyy-MM-dd' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="storeName">
+        <th mat-header-cell *matHeaderCellDef class="header-blue">Comercio</th>
+        <td mat-cell *matCellDef="let m">{{ m.storeName || '-' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef class="header-blue">Monto</th>
+        <td mat-cell *matCellDef="let m">{{ m.amount | currency }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns; let even = even" [class.alt-row]="even"></tr>
+    </table>
+    <p *ngIf="movements && !movements.length && consultado" class="no-data">No hay movimientos en el rango seleccionado.</p>
+  </div>
+</div>
