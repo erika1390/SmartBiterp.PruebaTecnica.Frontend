@@ -1,1 +1,135 @@
-<p>expenses works!</p>
+<div class="expenses-container">
+	<mat-card class="form-card">
+		<h2>Registrar Gasto</h2>
+		<form [formGroup]="form" (ngSubmit)="submit()">
+			<div class="form-row">
+				<mat-form-field appearance="outline">
+					<mat-label>Fecha</mat-label>
+					<input matInput [matDatepicker]="picker" formControlName="date" required>
+					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+					<mat-datepicker #picker></mat-datepicker>
+				</mat-form-field>
+				<mat-form-field appearance="outline">
+					<mat-label>Fondo</mat-label>
+					<mat-select formControlName="moneyFundId" required>
+						<mat-option *ngFor="let fund of moneyFunds()" [value]="fund.id">{{ fund.name }}</mat-option>
+					</mat-select>
+				</mat-form-field>
+				   <mat-form-field appearance="outline">
+					   <mat-label>Tipo de Documento</mat-label>
+					   <mat-select formControlName="documentType" required>
+						   <mat-option [value]="1">Factura</mat-option>
+						   <mat-option [value]="2">Recibo</mat-option>
+						   <mat-option [value]="3">Otro</mat-option>
+					   </mat-select>
+				   </mat-form-field>
+			</div>
+			<div class="form-row">
+				<mat-form-field appearance="outline" class="full-width">
+					<mat-label>Comercio</mat-label>
+					<input matInput formControlName="storeName" required>
+				</mat-form-field>
+				<mat-form-field appearance="outline" class="full-width">
+					<mat-label>Observaciones</mat-label>
+					<input matInput formControlName="observations">
+				</mat-form-field>
+			</div>
+			<div class="details-section">
+				<h3>Detalles</h3>
+				<table mat-table [dataSource]="details.controls" class="details-table">
+					<ng-container matColumnDef="expenseTypeId">
+						<th mat-header-cell *matHeaderCellDef>Tipo de Gasto</th>
+						<td mat-cell *matCellDef="let row; let i = index">
+							<mat-form-field appearance="outline">
+								<mat-label>Tipo</mat-label>
+								<mat-select [formControl]="row.get('expenseTypeId')" required>
+									<mat-option *ngFor="let type of expenseTypes()" [value]="type.id">{{ type.description }}</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="amount">
+						<th mat-header-cell *matHeaderCellDef>Monto</th>
+						<td mat-cell *matCellDef="let row; let i = index">
+							<mat-form-field appearance="outline">
+								<mat-label>Monto</mat-label>
+								<input matInput type="number" min="0.01" [formControl]="row.get('amount')" required>
+							</mat-form-field>
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="actions">
+						<th mat-header-cell *matHeaderCellDef></th>
+						<td mat-cell *matCellDef="let row; let i = index">
+							<button class="delete" type="button" (click)="removeDetail(i)" [disabled]="details.length === 1">Quitar</button>
+						</td>
+					</ng-container>
+					<tr mat-header-row *matHeaderRowDef="['expenseTypeId', 'amount', 'actions']"></tr>
+					<tr mat-row *matRowDef="let row; columns: ['expenseTypeId', 'amount', 'actions'];"></tr>
+				</table>
+				<button type="button" (click)="addDetail()">Agregar Detalle</button>
+			</div>
+			<div class="form-actions">
+				<button type="submit" [disabled]="form.invalid || loading()">Registrar</button>
+			</div>
+		</form>
+	</mat-card>
+
+	<mat-card class="table-card">
+		<h2>Gastos Registrados</h2>
+		<mat-table [dataSource]="expenses()" class="expenses-table" multiTemplateDataRows>
+			<ng-container matColumnDef="date">
+				<th mat-header-cell *matHeaderCellDef>Fecha</th>
+				<td mat-cell *matCellDef="let element">{{ element.date }}</td>
+			</ng-container>
+			<ng-container matColumnDef="moneyFundName">
+				<th mat-header-cell *matHeaderCellDef>Fondo</th>
+				<td mat-cell *matCellDef="let element">{{ element.moneyFundName }}</td>
+			</ng-container>
+			<ng-container matColumnDef="documentType">
+				<th mat-header-cell *matHeaderCellDef>Tipo Doc.</th>
+				<td mat-cell *matCellDef="let element">{{ element.documentType }}</td>
+			</ng-container>
+			<ng-container matColumnDef="storeName">
+				<th mat-header-cell *matHeaderCellDef>Comercio</th>
+				<td mat-cell *matCellDef="let element">{{ element.storeName }}</td>
+			</ng-container>
+			<ng-container matColumnDef="observations">
+				<th mat-header-cell *matHeaderCellDef>Observaciones</th>
+				<td mat-cell *matCellDef="let element">{{ element.observations }}</td>
+			</ng-container>
+			<ng-container matColumnDef="total">
+				<th mat-header-cell *matHeaderCellDef>Total</th>
+				<td mat-cell *matCellDef="let element">{{ getTotal(element.details) | currency:'USD':'symbol':'1.2-2' }}</td>
+			</ng-container>
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef>Acciones</th>
+				<td mat-cell *matCellDef="let element">
+					<button (click)="toggleExpand(element)">{{ expandedExpense === element ? 'Ocultar' : 'Detalles' }}</button>
+					<button class="delete" (click)="deleteExpense(element.id)">Eliminar</button>
+				</td>
+			</ng-container>
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;" class="expense-row" (click)="toggleExpand(row)"></tr>
+			<tr *ngFor="let row of expenses()" [class.details-row]="expandedExpense === row" [hidden]="expandedExpense !== row">
+				<td [attr.colspan]="displayedColumns.length">
+					<mat-divider></mat-divider>
+					<div class="details-table-wrapper">
+						<h4>Detalles</h4>
+						<table mat-table [dataSource]="row.details" class="details-table-inner">
+							<ng-container matColumnDef="expenseTypeName">
+								<th mat-header-cell *matHeaderCellDef>Tipo de Gasto</th>
+								<td mat-cell *matCellDef="let d">{{ d.expenseTypeName }}</td>
+							</ng-container>
+							<ng-container matColumnDef="amount">
+								<th mat-header-cell *matHeaderCellDef>Monto</th>
+								<td mat-cell *matCellDef="let d">{{ d.amount | currency:'USD':'symbol':'1.2-2' }}</td>
+							</ng-container>
+							<tr mat-header-row *matHeaderRowDef="['expenseTypeName', 'amount']"></tr>
+							<tr mat-row *matRowDef="let row; columns: ['expenseTypeName', 'amount'];"></tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</mat-table>
+	</mat-card>
+</div>
