@@ -1,1 +1,41 @@
-<p>expense-types works!</p>
+<h2>Tipos de Gasto</h2>
+
+<button class="clean" (click)="new()">Limpiar</button>
+
+<!-- FORMULARIO -->
+<div form>
+  <label>Descripción:</label>
+  <input type="text" [(ngModel)]="form.description" placeholder="Descripción">
+
+  <label>Categoría:</label>
+  <input type="text" [(ngModel)]="form.category" placeholder="Categoría">
+
+  <button (click)="save()">
+    {{ isEditing ? 'Actualizar' : 'Guardar' }}
+  </button>
+</div>
+
+<hr>
+
+<!-- TABLA -->
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Descripción</th>
+      <th>Categoría</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of expenseTypes">
+      <td>{{ item.id }}</td>
+      <td>{{ item.description }}</td>
+      <td>{{ item.category }}</td>
+      <td>
+        <button (click)="edit(item)">Editar</button>
+        <button class="delete" (click)="delete(item.id)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

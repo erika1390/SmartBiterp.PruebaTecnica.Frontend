@@ -1,0 +1,74 @@
+button.clean {
+	background: #43a047;
+}
+button.clean:hover {
+	background: #2e7031;
+}
+// Estilos para el componente de Tipos de Gasto
+
+h2 {
+	color: #1976d2;
+	margin-bottom: 20px;
+}
+
+button {
+	background: #1976d2;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 6px 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	font-size: 15px;
+	transition: background 0.2s;
+}
+button:hover {
+	background: #125ea2;
+}
+button.delete {
+	background: #d32f2f;
+}
+button.delete:hover {
+	background: #b71c1c;
+}
+
+div[form] {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	align-items: center;
+	margin-bottom: 20px;
+}
+label {
+	font-weight: 500;
+	margin-right: 8px;
+}
+input[type="text"] {
+	padding: 6px 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-right: 12px;
+	font-size: 15px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	background: #fff;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+th, td {
+	padding: 10px 8px;
+	text-align: left;
+}
+th {
+	background: #1976d2;
+	color: #fff;
+	font-weight: 600;
+}
+tr:nth-child(even) {
+	background: #f5f5f5;
+}
+tr:hover {
+	background: #e3f2fd;
+}
