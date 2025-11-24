@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 import { MenuItem } from '../models/menu.model';
 
 @Injectable({
@@ -6,35 +8,13 @@ import { MenuItem } from '../models/menu.model';
 })
 export class MenuService {
 
-  constructor() {}
+  private apiUrl = 'http://localhost:5196/api/menus';
 
-  getMenu(): MenuItem[] {
-    return [
-      {
-        title: 'Mantenimientos',
-        icon: 'settings',
-        children: [
-          { title: 'Tipos de Gasto', route: '/expense-types' },
-          { title: 'Fondo Monetario', route: '/money-funds' }
-        ]
-      },
-      {
-        title: 'Movimientos',
-        icon: 'sync',
-        children: [
-          { title: 'Presupuesto por tipo de gasto', route: '/budgets' },
-          { title: 'Registros de gastos', route: '/expenses' },
-          { title: 'Depósitos', route: '/deposits' }
-        ]
-      },
-      {
-        title: 'Consultas y Reportes',
-        icon: 'bar_chart',
-        children: [
-          { title: 'Consulta de movimientos', route: '/movements' },
-          { title: 'Gráfico Comparativo Presupuesto y Ejecución', route: '/budget-vs-execution' }
-        ]
-      }
-    ];
+  constructor(private http: HttpClient) {}
+
+  getMenu(): Observable<MenuItem[]> {
+    return this.http.get<any>(this.apiUrl).pipe(
+      map(res => res.data)
+    );
   }
 }

@@ -1,45 +1,27 @@
-<mat-sidenav-container class="main-container">
-
-  <!-- SIDEBAR -->
-  <mat-sidenav #sidenav mode="side" opened class="sidenav">
-
+<mat-sidenav-container class="main-container" autosize="false" style="height: 100vh; min-height: 100vh;">
+  <mat-sidenav #sidenav mode="side" opened class="sidenav" style="height: 100vh; min-height: 100vh;">
     <mat-nav-list>
       <mat-expansion-panel *ngFor="let item of menu">
-
         <mat-expansion-panel-header>
-          <mat-icon>{{ item.icon }}</mat-icon>
           <span>{{ item.title }}</span>
         </mat-expansion-panel-header>
-
-        <a
-          *ngFor="let child of item.children"
-          mat-list-item
-          [routerLink]="child.route"
-        >
-          <mat-icon>{{ child.icon }}</mat-icon>
+        <a *ngFor="let child of item.children"
+           mat-list-item
+           [routerLink]="child.route">
           <span>{{ child.title }}</span>
         </a>
-
       </mat-expansion-panel>
-
     </mat-nav-list>
-
   </mat-sidenav>
-
-  <!-- CONTENT -->
-  <mat-sidenav-content class="content">
-
+  <mat-sidenav-content class="content" style="height: 100vh; min-height: 100vh;">
     <mat-toolbar color="primary">
-      <button mat-icon-button (click)="toggleSidenav()">
+      <button mat-icon-button (click)="toggleSidenav(sidenav)">
         <mat-icon>menu</mat-icon>
       </button>
       <span>SMARTBITERP - Expense Control</span>
     </mat-toolbar>
-
     <div class="page-body">
       <router-outlet></router-outlet>
     </div>
-
   </mat-sidenav-content>
-
 </mat-sidenav-container>
