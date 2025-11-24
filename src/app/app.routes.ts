@@ -1,3 +1,4 @@
+
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 
@@ -54,6 +55,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./modules/reportes/budget-vs-execution/budget-vs-execution.component')
             .then(c => c.BudgetVsExecutionComponent)
+      },
+      {
+        path: 'reportes/movements',
+        loadComponent: () =>
+          import('./modules/reportes/movements/movements.component')
+            .then(c => c.MovementsComponent)
       },
 
       // =============================
