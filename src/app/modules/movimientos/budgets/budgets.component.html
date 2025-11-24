@@ -1,1 +1,69 @@
-<p>budgets works!</p>
+
+<h2>Presupuestos</h2>
+
+<!-- SECCIÓN DE CONSULTA -->
+<div class="section-title">Consulta de Presupuestos</div>
+<div class="filters">
+	<label>Año:</label>
+	<input type="number" [(ngModel)]="filterYear" min="2000" max="2100" (change)="onFilterChange()">
+	<label>Mes:</label>
+	<select [(ngModel)]="filterMonth" (change)="onFilterChange()">
+		<option *ngFor="let m of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="m">{{ m }}</option>
+	</select>
+</div>
+
+<hr>
+
+<!-- SECCIÓN DE CREACIÓN/EDICIÓN -->
+<div class="section-title">{{ isEditing ? 'Editar Presupuesto' : 'Crear Presupuesto' }}</div>
+<button class="clean" (click)="new()">Limpiar</button>
+<div form>
+	<label>Tipo de Gasto:</label>
+	<select [(ngModel)]="form.expenseTypeId">
+		<option value="0">Seleccione...</option>
+		<option *ngFor="let t of expenseTypes" [value]="t.id">{{ t.description }}</option>
+	</select>
+
+	<label>Año:</label>
+	<input type="number" [(ngModel)]="form.year" min="2000" max="2100">
+
+	<label>Mes:</label>
+	<select [(ngModel)]="form.month">
+		<option *ngFor="let m of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="m">{{ m }}</option>
+	</select>
+
+	<label>Monto Asignado:</label>
+	<input type="number" [(ngModel)]="form.allocatedAmount" placeholder="Monto asignado">
+
+	<button (click)="save()">
+		{{ isEditing ? 'Actualizar' : 'Guardar' }}
+	</button>
+</div>
+
+<hr>
+
+<!-- TABLA -->
+<table>
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Tipo de Gasto</th>
+			<th>Año</th>
+			<th>Mes</th>
+			<th>Monto Asignado</th>
+			<th>Estado</th>
+			<!-- Sin columna de acciones -->
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let item of budgets">
+			<td>{{ item.id }}</td>
+			<td>{{ item.expenseTypeName }}</td>
+			<td>{{ item.year }}</td>
+			<td>{{ item.month }}</td>
+			<td>{{ item.allocatedAmount | number:'1.2-2' }}</td>
+			<td>{{ item.status }}</td>
+			<!-- Sin botones de acciones -->
+		</tr>
+	</tbody>
+</table>
