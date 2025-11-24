@@ -8,7 +8,17 @@
   <input type="text" [(ngModel)]="form.description" placeholder="Descripción">
 
   <label>Categoría:</label>
-  <input type="text" [(ngModel)]="form.category" placeholder="Categoría">
+  <select [(ngModel)]="form.category">
+    <option value="">Seleccione...</option>
+    <option value="Food">Alimentación</option>
+    <option value="Transport">Transporte</option>
+    <option value="Housing">Vivienda</option>
+    <option value="Health">Salud</option>
+    <option value="Education">Educación</option>
+    <option value="Entertainment">Entretenimiento</option>
+    <option value="Services">Servicios</option>
+    <option value="Other">Otro</option>
+  </select>
 
   <button (click)="save()">
     {{ isEditing ? 'Actualizar' : 'Guardar' }}

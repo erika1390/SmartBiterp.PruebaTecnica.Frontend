@@ -1,3 +1,21 @@
+select {
+	padding: 6px 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-right: 12px;
+	font-size: 15px;
+	background: #f9f9f9;
+	color: #333;
+	transition: border 0.2s;
+}
+select:focus {
+	border: 1.5px solid #1976d2;
+	outline: none;
+}
+option {
+	font-size: 15px;
+	color: #333;
+}
 button.clean {
 	background: #43a047;
 }
